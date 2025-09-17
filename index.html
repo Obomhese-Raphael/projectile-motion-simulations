@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projectile Motion Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            text-align: left;
+            line-height: 1.5;
+        }
+        
+        .simulation-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .canvas-container {
+            background: linear-gradient(to bottom, #FFD700 0%, #FFD700 60%, #DEB887 60%, #DEB887 100%);
+            border: 2px solid #333;
+            position: relative;
+        }
+        
+        #trajectoryCanvas {
+            display: block;
+            background: transparent;
+        }
+        
+        .control-panel {
+            background-color: #00FF00;
+            padding: 20px;
+            border: 2px solid #333;
+            width: 300px;
+            color: black;
+            font-weight: bold;
+        }
+        
+        .control-section {
+            margin-bottom: 15px;
+        }
+        
+        .control-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #000;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .btn-reset {
+            background-color: #00FFFF;
+            color: black;
+        }
+        
+        .btn-start {
+            background-color: #FFD700;
+            color: black;
+        }
+        
+        .btn:hover {
+            opacity: 0.8;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .input-group label {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .input-group input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #000;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .input-group .unit {
+            margin-left: 5px;
+            font-weight: bold;
+        }
+        
+        .radio-group {
+            margin-bottom: 10px;
+        }
+        
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+            margin-left: 10px;
+        }
+        
+        .stats-display {
+            background-color: #FFD700;
+            color: red;
+            font-weight: bold;
+            padding: 15px;
+            margin-top: 10px;
+            border: 2px solid #000;
+        }
+        
+        .time-display {
+            background-color: black;
+            color: red;
+            padding: 10px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border: 2px solid #333;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+    <h1>Web-Based Simulator for Projectile Motion</h1>
+    <p>Project by: <strong>Obomhese Raphael Marvellous</strong></p>
+    <p>Final Year Project - Physics Department</p>
+    <p><strong>210571052</strong></p>
+</div>
+
+<div class="description">
+    <h2>Project Overview</h2>
+    <p>
+        This web-based simulator demonstrates the principles of projectile motion through an interactive interface. It allows users to visualize and experiment with various parameters that influence the motion of a projectile. The application is designed to help users understand the relationship between initial conditions such as velocity, angle, height, and gravitational acceleration, and how they affect the trajectory of the projectile.
+    </p>
+    
+    <h2>Instructions</h2>
+    <p>
+        The simulation allows the user to modify the following input parameters:
+    </p>
+    <ul>
+        <li><strong>Initial Height:</strong> The height from which the projectile is launched (in meters).</li>
+        <li><strong>Initial Speed:</strong> The velocity at which the projectile is launched (in meters per second).</li>
+        <li><strong>Launch Angle:</strong> The angle at which the projectile is launched (in degrees).</li>
+        <li><strong>Mass:</strong> The mass of the projectile (in kilograms).</li>
+        <li><strong>Gravitational Acceleration:</strong> The gravitational acceleration constant (in meters per second squared).</li>
+    </ul>
+    
+    <p>
+        Users can also choose the <strong>slow motion</strong> option to view the simulation at a slower pace. This is particularly useful for closely examining the trajectory at different stages of the motion.
+    </p>
+    
+    <h2>Features</h2>
+    <ul>
+        <li><strong>Interactive Controls:</strong> Adjust initial conditions and observe the resulting motion in real-time.</li>
+        <li><strong>Visual Representation:</strong> The trajectory of the projectile is displayed on a canvas, with real-time updates as the simulation progresses.</li>
+        <li><strong>Multiple Display Options:</strong> View data related to position, velocity, acceleration, force, or energy of the projectile.</li>
+        <li><strong>Reset/Start/Pause:</strong> Control the simulation by starting, pausing, or resetting the projectile to its initial position.</li>
+    </ul>
+
+    <h2>Simulation Details</h2>
+    <p>
+        The effect of air resistance is currently neglected in this simulation. The projectile follows a parabolic trajectory, with calculations based on basic kinematic equations. 
+    </p>
+    
+    <p>
+        This tool is designed for educational purposes and aims to provide a visual and interactive way to learn and explore the dynamics of projectile motion.
+    </p>
+</div>
+
+    
+    <div class="simulation-container">
+        <div class="canvas-container">
+            <canvas id="trajectoryCanvas" width="500" height="400"></canvas>
+        </div>
+        
+        <div class="control-panel">
+            <div class="time-display" id="timeDisplay">0.000 s</div>
+            
+            <div class="control-buttons">
+                <button class="btn btn-reset" onclick="resetSimulation()">Reset</button>
+                <button class="btn btn-start" id="startBtn" onclick="toggleSimulation()">Start</button>
+            </div>
+            
+            <div class="checkbox-container">
+                <input type="checkbox" id="slowMotion">
+                <label for="slowMotion">Slow motion</label>
+            </div>
+            
+            <div class="input-group">
+                <label>Initial height:</label>
+                <input type="number" id="initialHeight" value="5.000" step="0.001" min="0" max="20">
+                <span class="unit">m</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Initial speed:</label>
+                <input type="number" id="initialSpeed" value="5.000" step="0.001" min="0" max="50">
+                <span class="unit">m/s</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Angle:</label>
+                <input type="number" id="angle" value="45.000" step="0.001" min="0" max="90">
+                <span class="unit">°</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Mass:</label>
+                <input type="number" id="mass" value="1.000" step="0.001" min="0.1" max="10">
+                <span class="unit">kg</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Gravitational acceleration:</label>
+                <input type="number" id="gravity" value="9.810" step="0.001" min="1" max="20">
+                <span class="unit">m/s²</span>
+            </div>
+            
+            <div class="radio-group">
+                <div><input type="radio" name="display" value="position" checked><label>Position</label></div>
+                <div><input type="radio" name="display" value="speed"><label>Speed</label></div>
+                <div><input type="radio" name="display" value="acceleration"><label>Acceleration</label></div>
+                <div><input type="radio" name="display" value="force"><label>Force</label></div>
+                <div><input type="radio" name="display" value="energy"><label>Energy</label></div>
+            </div>
+            
+            <div class="stats-display" id="statsDisplay">
+                <div>Position:</div>
+                <div>x = 0.00 m (horizontal)</div>
+                <div>y = 5.00 m (vertical)</div>
+                <div><br></div>
+                <div>Horizontal distance: 0.00 m</div>
+                <div>Maximum height: 5.00 m</div>
+                <div><br></div>
+                <div>Time: 0.00 s</div>
+            </div>
+            
+            <div class="footer">Obomhese Raphael Marvellous - 210571052</div>
+        </div>
+    </div>
+
+    <script>
+        let canvas = document.getElementById('trajectoryCanvas');
+        let ctx = canvas.getContext('2d');
+        let animationId;
+        let isRunning = false;
+        let time = 0;
+        let projectile = { x: 0, y: 0, vx: 0, vy: 0 };
+        let trajectory = [];
+        let maxDistance = 0;
+        let maxHeight = 0;
+        let totalTime = 0;
+        
+        // Scale factors for drawing
+        const SCALE_X = 40; // pixels per meter horizontal
+        const SCALE_Y = 40; // pixels per meter vertical
+        const ORIGIN_X = 50;
+        const ORIGIN_Y = canvas.height - 50;
+        
+        function initializeSimulation() {
+            const h0 = parseFloat(document.getElementById('initialHeight').value);
+            const v0 = parseFloat(document.getElementById('initialSpeed').value);
+            const angle = parseFloat(document.getElementById('angle').value) * Math.PI / 180;
+            const g = parseFloat(document.getElementById('gravity').value);
+            
+            projectile.x = 0;
+            projectile.y = h0;
+            projectile.vx = v0 * Math.cos(angle);
+            projectile.vy = v0 * Math.sin(angle);
+            
+            trajectory = [{x: projectile.x, y: projectile.y}];
+            time = 0;
+            
+            // Calculate theoretical maximum values
+            maxHeight = h0 + (projectile.vy * projectile.vy) / (2 * g);
+            totalTime = (projectile.vy + Math.sqrt(projectile.vy * projectile.vy + 2 * g * h0)) / g;
+            maxDistance = projectile.vx * totalTime;
+            
+            updateDisplay();
+            drawScene();
+        }
+        
+        function updatePhysics(dt) {
+            const g = parseFloat(document.getElementById('gravity').value);
+            
+            // Update position
+            projectile.x += projectile.vx * dt;
+            projectile.y += projectile.vy * dt - 0.5 * g * dt * dt;
+            
+            // Update velocity
+            projectile.vy -= g * dt;
+            
+            // Check if projectile hits ground
+            if (projectile.y <= 0 && time > 0) {
+                projectile.y = 0;
+                stopSimulation();
+            }
+            
+            trajectory.push({x: projectile.x, y: projectile.y});
+            time += dt;
+        }
+        
+        function updateDisplay() {
+            document.getElementById('timeDisplay').textContent = time.toFixed(3) + ' s';
+            
+            const displayMode = document.querySelector('input[name="display"]:checked').value;
+            const statsDiv = document.getElementById('statsDisplay');
+            
+            let content = '';
+            
+            switch(displayMode) {
+                case 'position':
+                    content = `
+                        <div>Position:</div>
+                        <div>x = ${projectile.x.toFixed(2)} m (horizontal)</div>
+                        <div>y = ${projectile.y.toFixed(2)} m (vertical)</div>
+                        <div><br></div>
+                        <div>Horizontal distance: ${maxDistance.toFixed(2)} m</div>
+                        <div>Maximum height: ${maxHeight.toFixed(2)} m</div>
+                        <div><br></div>
+                        <div>Time: ${time.toFixed(2)} s</div>
+                    `;
+                    break;
+                case 'speed':
+                    const speed = Math.sqrt(projectile.vx * projectile.vx + projectile.vy * projectile.vy);
+                    content = `
+                        <div>Speed:</div>
+                        <div>vx = ${projectile.vx.toFixed(2)} m/s</div>
+                        <div>vy = ${projectile.vy.toFixed(2)} m/s</div>
+                        <div>Total: ${speed.toFixed(2)} m/s</div>
+                    `;
+                    break;
+                case 'acceleration':
+                    const g = parseFloat(document.getElementById('gravity').value);
+                    content = `
+                        <div>Acceleration:</div>
+                        <div>ax = 0.00 m/s²</div>
+                        <div>ay = -${g.toFixed(2)} m/s²</div>
+                        <div>Total: ${g.toFixed(2)} m/s²</div>
+                    `;
+                    break;
+                case 'force':
+                    const mass = parseFloat(document.getElementById('mass').value);
+                    const g2 = parseFloat(document.getElementById('gravity').value);
+                    const force = mass * g2;
+                    content = `
+                        <div>Force:</div>
+                        <div>Fx = 0.00 N</div>
+                        <div>Fy = -${force.toFixed(2)} N</div>
+                        <div>Total: ${force.toFixed(2)} N</div>
+                    `;
+                    break;
+                case 'energy':
+                    const mass2 = parseFloat(document.getElementById('mass').value);
+                    const g3 = parseFloat(document.getElementById('gravity').value);
+                    const kinetic = 0.5 * mass2 * (projectile.vx * projectile.vx + projectile.vy * projectile.vy);
+                    const potential = mass2 * g3 * projectile.y;
+                    const total = kinetic + potential;
+                    content = `
+                        <div>Energy:</div>
+                        <div>Kinetic: ${kinetic.toFixed(2)} J</div>
+                        <div>Potential: ${potential.toFixed(2)} J</div>
+                        <div>Total: ${total.toFixed(2)} J</div>
+                    `;
+                    break;
+            }
+            
+            statsDiv.innerHTML = content;
+        }
+        
+        function drawScene() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            drawGrid();
+            
+            // Draw trajectory
+            drawTrajectory();
+            
+            // Draw projectile
+            drawProjectile();
+        }
+        
+        function drawGrid() {
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 0.5;
+            
+            // Vertical lines (every meter)
+            for (let i = 0; i <= 12; i++) {
+                const x = ORIGIN_X + i * SCALE_X;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            // Horizontal lines (every meter)
+            for (let i = 0; i <= 10; i++) {
+                const y = ORIGIN_Y - i * SCALE_Y;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            
+            // X axis
+            ctx.beginPath();
+            ctx.moveTo(ORIGIN_X, ORIGIN_Y);
+            ctx.lineTo(canvas.width, ORIGIN_Y);
+            ctx.stroke();
+            
+            // Y axis
+            ctx.beginPath();
+            ctx.moveTo(ORIGIN_X, ORIGIN_Y);
+            ctx.lineTo(ORIGIN_X, 0);
+            ctx.stroke();
+            
+            // Add axis labels
+            ctx.fillStyle = '#000';
+            ctx.font = '12px Arial';
+            
+            // X axis numbers
+            for (let i = 0; i <= 12; i += 2) {
+                const x = ORIGIN_X + i * SCALE_X;
+                ctx.fillText(i.toString(), x - 5, ORIGIN_Y + 15);
+            }
+            
+            // Y axis numbers
+            for (let i = 2; i <= 8; i += 2) {
+                const y = ORIGIN_Y - i * SCALE_Y;
+                ctx.fillText(i.toString(), ORIGIN_X - 20, y + 4);
+            }
+            
+            // Axis labels
+            ctx.font = '14px Arial';
+            ctx.fillText('x (in m)', canvas.width - 60, ORIGIN_Y + 35);
+            ctx.save();
+            ctx.translate(15, 50);
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText('y (in m)', 0, 0);
+            ctx.restore();
+        }
+        
+        function drawTrajectory() {
+            if (trajectory.length < 2) return;
+            
+            ctx.strokeStyle = '#FF0000';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            // Start from the first trajectory point
+            let started = false;
+            for (let i = 0; i < trajectory.length; i++) {
+                const point = trajectory[i];
+                const screenX = ORIGIN_X + point.x * SCALE_X;
+                const screenY = ORIGIN_Y - point.y * SCALE_Y;
+                
+                // Only draw points that are within canvas bounds
+                if (screenX >= ORIGIN_X && screenX <= canvas.width && 
+                    screenY >= 0 && screenY <= ORIGIN_Y) {
+                    
+                    if (!started) {
+                        ctx.moveTo(screenX, screenY);
+                        started = true;
+                    } else {
+                        ctx.lineTo(screenX, screenY);
+                    }
+                }
+            }
+            
+            ctx.stroke();
+        }
+        
+        function drawProjectile() {
+            const screenX = ORIGIN_X + projectile.x * SCALE_X;
+            const screenY = ORIGIN_Y - projectile.y * SCALE_Y;
+            
+            // Only draw if within bounds
+            if (screenX >= ORIGIN_X && screenX <= canvas.width && 
+                screenY >= 0 && screenY <= ORIGIN_Y) {
+                
+                // Draw projectile as a black circle
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, 6, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Add a white outline for visibility
+                ctx.strokeStyle = '#FFF';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+        }
+        
+        function animate() {
+            if (!isRunning) return;
+            
+            const slowMotion = document.getElementById('slowMotion').checked;
+            const dt = slowMotion ? 0.001 : 0.01;
+            
+            updatePhysics(dt);
+            updateDisplay();
+            drawScene();
+            
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        function toggleSimulation() {
+            const startBtn = document.getElementById('startBtn');
+            
+            if (!isRunning) {
+                isRunning = true;
+                startBtn.textContent = 'Stop';
+                animate();
+            } else {
+                stopSimulation();
+            }
+        }
+        
+        function stopSimulation() {
+            isRunning = false;
+            document.getElementById('startBtn').textContent = 'Start';
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+        
+        function resetSimulation() {
+            stopSimulation();
+            initializeSimulation();
+        }
+        
+        // Event listeners for input changes
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('change', function() {
+                if (!isRunning) {
+                    initializeSimulation();
+                }
+            });
+        });
+        
+        document.querySelectorAll('input[name="display"]').forEach(input => {
+            input.addEventListener('change', updateDisplay);
+        });
+        
+        // Initialize simulation on page load
+        initializeSimulation();
+    </script>
+</body>
+</html>
