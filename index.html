@@ -5,210 +5,377 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projectile Motion Simulation</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3b82f6 100%);
+            min-height: 100vh;
+            color: #333;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            margin: 5px 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
         
         .description {
-            max-width: 800px;
-            margin: 0 auto 20px auto;
+            max-width: 1000px;
+            margin: 0 auto 30px auto;
             text-align: left;
-            line-height: 1.5;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .description h2 {
+            color: #2563eb;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .description p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .description ul {
+            margin-left: 20px;
+            color: #555;
+        }
+        
+        .description li {
+            margin-bottom: 8px;
         }
         
         .simulation-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 30px;
             flex-wrap: wrap;
         }
         
         .canvas-container {
-            background: linear-gradient(to bottom, #FFD700 0%, #FFD700 60%, #DEB887 60%, #DEB887 100%);
-            border: 2px solid #333;
+            background: #FFD700;
+            border-radius: 15px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
             position: relative;
+            height: 100vh;
         }
         
         #trajectoryCanvas {
             display: block;
             background: transparent;
+            height: 80vh;
+            padding-right: 50px;
+            padding-bottom: 30px;
+            padding-top: 50px;
         }
         
         .control-panel {
-            background-color: #00FF00;
-            padding: 20px;
-            border: 2px solid #333;
-            width: 300px;
-            color: black;
-            font-weight: bold;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            padding: 30px;
+            border-radius: 20px;
+            width: 320px;
+            color: #334155;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .control-section {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .control-buttons {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 25px;
         }
         
         .btn {
-            padding: 10px;
+            padding: 15px 20px;
             font-size: 16px;
-            font-weight: bold;
-            border: 2px solid #000;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
             text-align: center;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
         
         .btn-reset {
-            background-color: #00FFFF;
-            color: black;
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+        }
+        
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(220, 38, 38, 0.4);
         }
         
         .btn-start {
-            background-color: #FFD700;
-            color: black;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
         }
         
-        .btn:hover {
-            opacity: 0.8;
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(22, 163, 74, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
         }
         
         .checkbox-container {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            border: 2px solid rgba(59, 130, 246, 0.2);
         }
         
         .checkbox-container input[type="checkbox"] {
-            margin-right: 8px;
-            transform: scale(1.2);
+            margin-right: 12px;
+            transform: scale(1.3);
+            accent-color: #3b82f6;
+        }
+        
+        .checkbox-container label {
+            font-weight: 500;
+            color: #1e40af;
+            font-size: 15px;
         }
         
         .input-group {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            background: rgba(248, 250, 252, 0.8);
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group:hover {
+            border-color: #3b82f6;
         }
         
         .input-group label {
             flex: 1;
-            margin-right: 10px;
+            margin-right: 15px;
+            font-weight: 500;
+            color: #475569;
+            font-size: 14px;
         }
         
         .input-group input {
-            width: 80px;
-            padding: 5px;
-            border: 1px solid #000;
+            width: 90px;
+            padding: 10px 12px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
             text-align: center;
-            font-weight: bold;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         
         .input-group .unit {
-            margin-left: 5px;
-            font-weight: bold;
+            margin-left: 10px;
+            font-weight: 600;
+            color: #64748b;
+            font-size: 13px;
+            min-width: 40px;
         }
         
         .radio-group {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            background: rgba(248, 250, 252, 0.6);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .radio-group > div {
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .radio-group > div:hover {
+            background: rgba(59, 130, 246, 0.05);
         }
         
         .radio-group input[type="radio"] {
-            margin-right: 5px;
-            margin-left: 10px;
+            margin-right: 10px;
+            accent-color: #3b82f6;
+            transform: scale(1.1);
+        }
+        
+        .radio-group label {
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+            font-size: 14px;
         }
         
         .stats-display {
-            background-color: #FFD700;
-            color: red;
-            font-weight: bold;
-            padding: 15px;
-            margin-top: 10px;
-            border: 2px solid #000;
+            background: linear-gradient(135deg, #1f2937, #374151);
+            color: #fbbf24;
+            font-weight: 500;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid #4b5563;
+        }
+        
+        .stats-display div {
+            margin-bottom: 4px;
         }
         
         .time-display {
-            background-color: black;
-            color: red;
-            padding: 10px;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #06b6d4;
+            padding: 18px;
             text-align: center;
-            font-family: 'Courier New', monospace;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            border: 2px solid #333;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+            border: 2px solid #334155;
         }
         
         .footer {
             text-align: center;
-            margin-top: 20px;
-            font-weight: bold;
+            margin-top: 25px;
+            font-weight: 600;
+            color: #64748b;
+            font-size: 14px;
+            padding: 15px;
+            background: rgba(248, 250, 252, 0.7);
+            border-radius: 8px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .simulation-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-panel {
+                width: 100%;
+                max-width: 500px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            body {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
-    <h1>Web-Based Simulator for Projectile Motion</h1>
-    <p>Project by: <strong>Obomhese Raphael Marvellous</strong></p>
-    <p>Final Year Project - Physics Department</p>
-    <p><strong>210571052</strong></p>
-</div>
+        <h1>Web-Based Simulator for Projectile Motion</h1>
+        <p>Project by: <strong>Obomhese Raphael Marvellous</strong></p>
+        <p>Final Year Project - Physics Department</p>
+        <p><strong>210571052</strong></p>
+    </div>
 
-<div class="description">
-    <h2>Project Overview</h2>
-    <p>
-        This web-based simulator demonstrates the principles of projectile motion through an interactive interface. It allows users to visualize and experiment with various parameters that influence the motion of a projectile. The application is designed to help users understand the relationship between initial conditions such as velocity, angle, height, and gravitational acceleration, and how they affect the trajectory of the projectile.
-    </p>
-    
-    <h2>Instructions</h2>
-    <p>
-        The simulation allows the user to modify the following input parameters:
-    </p>
-    <ul>
-        <li><strong>Initial Height:</strong> The height from which the projectile is launched (in meters).</li>
-        <li><strong>Initial Speed:</strong> The velocity at which the projectile is launched (in meters per second).</li>
-        <li><strong>Launch Angle:</strong> The angle at which the projectile is launched (in degrees).</li>
-        <li><strong>Mass:</strong> The mass of the projectile (in kilograms).</li>
-        <li><strong>Gravitational Acceleration:</strong> The gravitational acceleration constant (in meters per second squared).</li>
-    </ul>
-    
-    <p>
-        Users can also choose the <strong>slow motion</strong> option to view the simulation at a slower pace. This is particularly useful for closely examining the trajectory at different stages of the motion.
-    </p>
-    
-    <h2>Features</h2>
-    <ul>
-        <li><strong>Interactive Controls:</strong> Adjust initial conditions and observe the resulting motion in real-time.</li>
-        <li><strong>Visual Representation:</strong> The trajectory of the projectile is displayed on a canvas, with real-time updates as the simulation progresses.</li>
-        <li><strong>Multiple Display Options:</strong> View data related to position, velocity, acceleration, force, or energy of the projectile.</li>
-        <li><strong>Reset/Start/Pause:</strong> Control the simulation by starting, pausing, or resetting the projectile to its initial position.</li>
-    </ul>
+    <div class="description">
+        <h2>Project Overview</h2>
+        <p>
+            This web-based simulator demonstrates the principles of projectile motion through an interactive interface. It allows users to visualize and experiment with various parameters that influence the motion of a projectile. The application is designed to help users understand the relationship between initial conditions such as velocity, angle, height, and gravitational acceleration, and how they affect the trajectory of the projectile.
+        </p>
+        
+        <h2>Instructions</h2>
+        <p>
+            The simulation allows the user to modify the following input parameters:
+        </p>
+        <ul>
+            <li><strong>Initial Height:</strong> The height from which the projectile is launched (in meters).</li>
+            <li><strong>Initial Speed:</strong> The velocity at which the projectile is launched (in meters per second).</li>
+            <li><strong>Launch Angle:</strong> The angle at which the projectile is launched (in degrees).</li>
+            <li><strong>Mass:</strong> The mass of the projectile (in kilograms).</li>
+            <li><strong>Gravitational Acceleration:</strong> The gravitational acceleration constant (in meters per second squared).</li>
+        </ul>
+        
+        <p>
+            Users can also choose the <strong>slow motion</strong> option to view the simulation at a slower pace. This is particularly useful for closely examining the trajectory at different stages of the motion.
+        </p>
+        
+        <h2>Features</h2>
+        <ul>
+            <li><strong>Interactive Controls:</strong> Adjust initial conditions and observe the resulting motion in real-time.</li>
+            <li><strong>Visual Representation:</strong> The trajectory of the projectile is displayed on a canvas, with real-time updates as the simulation progresses.</li>
+            <li><strong>Multiple Display Options:</strong> View data related to position, velocity, acceleration, force, or energy of the projectile.</li>
+            <li><strong>Reset/Start/Pause:</strong> Control the simulation by starting, pausing, or resetting the projectile to its initial position.</li>
+        </ul>
 
-    <h2>Simulation Details</h2>
-    <p>
-        The effect of air resistance is currently neglected in this simulation. The projectile follows a parabolic trajectory, with calculations based on basic kinematic equations. 
-    </p>
-    
-    <p>
-        This tool is designed for educational purposes and aims to provide a visual and interactive way to learn and explore the dynamics of projectile motion.
-    </p>
-</div>
+        <h2>Simulation Details</h2>
+        <p>
+            The effect of air resistance is currently neglected in this simulation. The projectile follows a parabolic trajectory, with calculations based on basic kinematic equations. 
+        </p>
+        
+        <p>
+            This tool is designed for educational purposes and aims to provide a visual and interactive way to learn and explore the dynamics of projectile motion.
+        </p>
+    </div>
 
-    
     <div class="simulation-container">
         <div class="canvas-container">
-            <canvas id="trajectoryCanvas" width="500" height="400"></canvas>
+            <canvas id="trajectoryCanvas" width="600" height="700"></canvas>
         </div>
         
         <div class="control-panel">
@@ -226,7 +393,7 @@
             
             <div class="input-group">
                 <label>Initial height:</label>
-                <input type="number" id="initialHeight" value="5.000" step="0.001" min="0" max="20">
+                <input type="number" id="initialHeight" value="5.000" step="0.001" min="0" max="50">
                 <span class="unit">m</span>
             </div>
             
@@ -289,12 +456,6 @@
         let maxHeight = 0;
         let totalTime = 0;
         
-        // Scale factors for drawing
-        const SCALE_X = 40; // pixels per meter horizontal
-        const SCALE_Y = 40; // pixels per meter vertical
-        const ORIGIN_X = 50;
-        const ORIGIN_Y = canvas.height - 50;
-        
         function initializeSimulation() {
             const h0 = parseFloat(document.getElementById('initialHeight').value);
             const v0 = parseFloat(document.getElementById('initialSpeed').value);
@@ -314,8 +475,36 @@
             totalTime = (projectile.vy + Math.sqrt(projectile.vy * projectile.vy + 2 * g * h0)) / g;
             maxDistance = projectile.vx * totalTime;
             
+            // Dynamic scaling based on trajectory bounds
+            updateScaling();
+            
             updateDisplay();
             drawScene();
+        }
+        
+        function updateScaling() {
+            // Calculate the bounds of the trajectory
+            const maxX = Math.max(maxDistance, 10); // Minimum 8m horizontal
+            const maxY = Math.max(maxHeight, 8);   // Minimum 6m vertical
+            
+            // Calculate scale factors to fit the trajectory in the canvas with better margins
+            const availableWidth = canvas.width - 120; // More margin for vectors
+            const availableHeight = canvas.height - 120; // More margin for vectors
+            
+            const scaleX = availableWidth / maxX;
+            const scaleY = availableHeight / maxY;
+            
+            // Use the smaller scale to ensure everything fits, but set reasonable limits
+            const scale = Math.min(scaleX, scaleY);
+            
+            // Set minimum and maximum scale factors for readability
+            const finalScale = Math.max(20, Math.min(60, scale));
+            
+            // Update global scale factors
+            window.SCALE_X = finalScale;
+            window.SCALE_Y = finalScale;
+            window.ORIGIN_X = 100; // More space for Y-axis labels
+            window.ORIGIN_Y = canvas.height - 80; // More space for X-axis labels
         }
         
         function updatePhysics(dt) {
@@ -421,29 +610,48 @@
         }
         
         function drawGrid() {
-            ctx.strokeStyle = '#666';
+            // Use dynamic scaling
+            const SCALE_X = window.SCALE_X || 40;
+            const SCALE_Y = window.SCALE_Y || 40;
+            const ORIGIN_X = window.ORIGIN_X || 50;
+            const ORIGIN_Y = window.ORIGIN_Y || canvas.height - 50;
+            
+            ctx.strokeStyle = 'rgba(139, 69, 19, 0.3)'; // Brown with transparency
             ctx.lineWidth = 0.5;
             
-            // Vertical lines (every meter)
-            for (let i = 0; i <= 12; i++) {
+            // Calculate grid spacing based on scale
+            let gridSpacing = 1; // Default 1 meter
+            if (SCALE_X < 25) gridSpacing = 2; // 2 meter spacing for small scales
+            if (SCALE_X < 15) gridSpacing = 5; // 5 meter spacing for very small scales
+            
+            // Calculate maximum values to display
+            const maxX = Math.ceil(maxDistance + 2);
+            const maxY = Math.ceil(maxHeight + 1);
+            
+            // Vertical lines
+            for (let i = 0; i <= maxX; i += gridSpacing) {
                 const x = ORIGIN_X + i * SCALE_X;
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
+                if (x <= canvas.width) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvas.height);
+                    ctx.stroke();
+                }
             }
             
-            // Horizontal lines (every meter)
-            for (let i = 0; i <= 10; i++) {
+            // Horizontal lines
+            for (let i = 0; i <= maxY; i += gridSpacing) {
                 const y = ORIGIN_Y - i * SCALE_Y;
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
+                if (y >= 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                    ctx.stroke();
+                }
             }
             
             // Draw axes
-            ctx.strokeStyle = '#000';
+            ctx.strokeStyle = '#8B4513'; // Saddle brown
             ctx.lineWidth = 2;
             
             // X axis
@@ -458,37 +666,50 @@
             ctx.lineTo(ORIGIN_X, 0);
             ctx.stroke();
             
-            // Add axis labels
-            ctx.fillStyle = '#000';
-            ctx.font = '12px Arial';
+            // Add axis labels with dynamic spacing
+            ctx.fillStyle = '#8B4513';
+            ctx.font = 'bold 11px Inter';
             
             // X axis numbers
-            for (let i = 0; i <= 12; i += 2) {
+            for (let i = 0; i <= maxX; i += gridSpacing * 2) {
                 const x = ORIGIN_X + i * SCALE_X;
-                ctx.fillText(i.toString(), x - 5, ORIGIN_Y + 15);
+                if (x <= canvas.width - 20) {
+                    ctx.fillText(i.toString(), x - 5, ORIGIN_Y + 15);
+                }
             }
             
             // Y axis numbers
-            for (let i = 2; i <= 8; i += 2) {
+            for (let i = gridSpacing; i <= maxY; i += gridSpacing * 2) {
                 const y = ORIGIN_Y - i * SCALE_Y;
-                ctx.fillText(i.toString(), ORIGIN_X - 20, y + 4);
+                if (y >= 15) {
+                    ctx.fillText(i.toString(), ORIGIN_X - 20, y + 4);
+                }
             }
             
             // Axis labels
-            ctx.font = '14px Arial';
-            ctx.fillText('x (in m)', canvas.width - 60, ORIGIN_Y + 35);
+            ctx.font = 'bold 12px Inter';
+            ctx.fillText('Distance (m)', canvas.width - 120, ORIGIN_Y + 30);
             ctx.save();
-            ctx.translate(15, 50);
+            ctx.translate(20, 80);
             ctx.rotate(-Math.PI/2);
-            ctx.fillText('y (in m)', 0, 0);
+            ctx.fillText('Height (m)', 0, 0);
             ctx.restore();
         }
         
         function drawTrajectory() {
             if (trajectory.length < 2) return;
             
-            ctx.strokeStyle = '#FF0000';
-            ctx.lineWidth = 3;
+            // Use dynamic scaling
+            const SCALE_X = window.SCALE_X || 40;
+            const SCALE_Y = window.SCALE_Y || 40;
+            const ORIGIN_X = window.ORIGIN_X || 50;
+            const ORIGIN_Y = window.ORIGIN_Y || canvas.height - 50;
+            
+            // Draw trajectory with professional styling
+            ctx.strokeStyle = '#dc2626'; // Professional red
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             ctx.beginPath();
             
             // Start from the first trajectory point
@@ -500,7 +721,7 @@
                 
                 // Only draw points that are within canvas bounds
                 if (screenX >= ORIGIN_X && screenX <= canvas.width && 
-                    screenY >= 0 && screenY <= ORIGIN_Y) {
+                    screenY >= 0 && screenY <= canvas.height) {
                     
                     if (!started) {
                         ctx.moveTo(screenX, screenY);
@@ -512,27 +733,164 @@
             }
             
             ctx.stroke();
+            
+            // Add subtle glow effect
+            ctx.shadowColor = '#dc2626';
+            ctx.shadowBlur = 8;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
         }
         
         function drawProjectile() {
+            // Use dynamic scaling
+            const SCALE_X = window.SCALE_X || 40;
+            const SCALE_Y = window.SCALE_Y || 40;
+            const ORIGIN_X = window.ORIGIN_X || 50;
+            const ORIGIN_Y = window.ORIGIN_Y || canvas.height - 50;
+            
             const screenX = ORIGIN_X + projectile.x * SCALE_X;
             const screenY = ORIGIN_Y - projectile.y * SCALE_Y;
             
-            // Only draw if within bounds
-            if (screenX >= ORIGIN_X && screenX <= canvas.width && 
-                screenY >= 0 && screenY <= ORIGIN_Y) {
+            // Only draw if projectile is within horizontal bounds (allow vertical extension for vectors)
+            if (screenX >= ORIGIN_X - 50 && screenX <= canvas.width + 50) {
                 
-                // Draw projectile as a black circle
-                ctx.fillStyle = '#000';
-                ctx.beginPath();
-                ctx.arc(screenX, screenY, 6, 0, 2 * Math.PI);
-                ctx.fill();
+                // Draw velocity vectors first (behind the projectile) - always draw them
+                drawVelocityVectors(screenX, screenY);
                 
-                // Add a white outline for visibility
-                ctx.strokeStyle = '#FFF';
-                ctx.lineWidth = 1;
-                ctx.stroke();
+                // Only draw the projectile ball if it's within visible bounds
+                if (screenY >= -20 && screenY <= canvas.height + 20) {
+                    // Draw projectile with gradient effect
+                    const gradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, 10);
+                    gradient.addColorStop(0, '#3b82f6');
+                    gradient.addColorStop(0.7, '#1d4ed8');
+                    gradient.addColorStop(1, '#1e40af');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(screenX, screenY, 8, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                    // Add white highlight
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.beginPath();
+                    ctx.arc(screenX - 2, screenY - 2, 3, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                    // Add subtle border
+                    ctx.strokeStyle = '#1e40af';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(screenX, screenY, 8, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
             }
+        }
+        
+        function drawVelocityVectors(centerX, centerY) {
+            // Scale factor for velocity arrows (adjusted for larger canvas)
+            const velocityScale = 6;
+            const minArrowLength = 25; // Minimum arrow length for better visibility
+            
+            // Calculate velocity vector endpoints
+            let vxScaled = projectile.vx * velocityScale;
+            let vyScaled = projectile.vy * velocityScale;
+            
+            // Ensure minimum visibility for both components
+            if (Math.abs(vxScaled) < minArrowLength) {
+                vxScaled = vxScaled >= 0 ? minArrowLength : -minArrowLength;
+            }
+            if (Math.abs(vyScaled) < minArrowLength) {
+                vyScaled = vyScaled >= 0 ? minArrowLength : -minArrowLength;
+            }
+            
+            // Invert Y for canvas coordinate system
+            const vyDisplay = -vyScaled;
+            
+            // No clipping - allow vectors to extend beyond normal bounds
+            // Horizontal velocity vector (vx) - Pink/Magenta
+            ctx.strokeStyle = '#e91e63';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            
+            // Draw horizontal arrow
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + vxScaled, centerY);
+            ctx.stroke();
+            
+            // Arrow head for horizontal vector
+            drawArrowHead(centerX + vxScaled, centerY, vxScaled > 0 ? 0 : Math.PI, '#e91e63');
+            
+            // Vertical velocity vector (vy) - Pink/Magenta
+            ctx.strokeStyle = '#e91e63';
+            ctx.lineWidth = 4;
+            
+            // Draw vertical arrow
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX, centerY + vyDisplay);
+            ctx.stroke();
+            
+            // Arrow head for vertical vector
+            drawArrowHead(centerX, centerY + vyDisplay, vyDisplay > 0 ? Math.PI/2 : -Math.PI/2, '#e91e63');
+            
+            // Total velocity vector (resultant) - Brighter red/orange
+            ctx.strokeStyle = '#ff5722';
+            ctx.lineWidth = 5;
+            
+            // Draw total velocity arrow
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + vxScaled, centerY + vyDisplay);
+            ctx.stroke();
+            
+            // Arrow head for total vector
+            const totalAngle = Math.atan2(vyDisplay, vxScaled);
+            drawArrowHead(centerX + vxScaled, centerY + vyDisplay, totalAngle, '#ff5722');
+            
+            // Draw velocity component labels with better positioning
+            ctx.fillStyle = '#e91e63';
+            ctx.font = 'bold 12px Inter';
+            ctx.textAlign = 'center';
+            
+            // Vx label - position it at the middle of the horizontal arrow
+            if (Math.abs(vxScaled) > 15) {
+                const labelX = centerX + vxScaled / 2;
+                const labelY = centerY - 10;
+                ctx.fillText('vx', labelX, labelY);
+            }
+            
+            // Vy label - position it at the middle of the vertical arrow
+            if (Math.abs(vyDisplay) > 15) {
+                const labelX = centerX + 15;
+                const labelY = centerY + vyDisplay / 2;
+                ctx.fillText('vy', labelX, labelY);
+            }
+            
+            // Reset text alignment
+            ctx.textAlign = 'start';
+        }
+        
+        function drawArrowHead(x, y, angle, color) {
+            const headLength = 12;
+            const headAngle = Math.PI / 5;
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(
+                x - headLength * Math.cos(angle - headAngle),
+                y - headLength * Math.sin(angle - headAngle)
+            );
+            ctx.moveTo(x, y);
+            ctx.lineTo(
+                x - headLength * Math.cos(angle + headAngle),
+                y - headLength * Math.sin(angle + headAngle)
+            );
+            ctx.stroke();
         }
         
         function animate() {
